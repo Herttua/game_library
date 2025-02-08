@@ -4,10 +4,17 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 
+#include "game_state.hh"
+
 class program
 {
 public:
     program();
+
+    static SDL_Window* window;
+    static SDL_Renderer* renderer;
+    static SDL_Event event;
+    static bool running;
 
     void init(const char* title, 
               int x, int y, 
@@ -17,11 +24,9 @@ public:
     void run();
     void clean();
 
-    static SDL_Window* window;
-    static SDL_Renderer* renderer;
-    static SDL_Event event;
-    static bool running;
-    
+    static void set_next_state(game_state* state);
+    static void change_state();
+
 private:
     const int FPS = 60;
     const int frame_delay = 1000 / FPS;

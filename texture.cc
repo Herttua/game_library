@@ -1,0 +1,350 @@
+#include "texture.hh"
+#include "program.hh"
+
+const SDL_FPoint* origo = nullptr;
+
+texture::texture() {}
+texture::~texture()
+{
+    SDL_FreeSurface(surface_pixels);
+    free();
+}
+
+bool texture::load(std::string file)
+{
+    free();
+
+    SDL_Texture* new_texture = 0;
+    SDL_Surface* loaded_surface = IMG_Load(file.c_str());
+    if(loaded_surface == 0)
+    {
+        std::cout << "Unable to load image! SDL_image error:\n" << IMG_GetError(); 
+    }
+    else
+    {
+        SDL_SetColorKey(loaded_surface, SDL_TRUE, SDL_MapRGB(loaded_surface->format,
+							     0, 0xFF, 0xFF));
+	                new_texture = SDL_CreateTextureFromSurface(program::renderer, loaded_surface);
+        if(new_texture == 0)
+        {
+            std::cout << "Unable to create texture from " << file.c_str()
+		                                                  << " SDL Error: " <<
+	                                                      SDL_GetError() << std::endl;
+        }
+        else
+        {
+            width = loaded_surface->w;
+            height = loaded_surface->h;
+        }
+        SDL_FreeSurface(loaded_surface);
+    }
+    tex = new_texture;
+    return tex != nullptr;
+}
+
+void texture::free()
+{
+    if(tex != 0)
+    {
+        SDL_DestroyTexture(tex);
+        width  = 0;
+        height = 0;
+    }
+}
+
+bool texture::load_from_pixels()
+{
+    if(surface_pixels == nullptr)
+    {
+        std::cout << "No pixels loaded!\n";
+    }
+    else
+    {
+        SDL_SetColorKey(surface_pixels, SDL_TRUE, 
+                        SDL_MapRGB(surface_pixels->format, 0, 0xFF, 0xFF));
+        tex = SDL_CreateTextureFromSurface(program::renderer, surface_pixels);
+        if(tex == nullptr)
+        {
+            std::cout << "Unable to create texture from pixels! " << SDL_GetError();
+        }
+        else
+        {
+            width = surface_pixels->w;
+            height = surface_pixels->h;
+        }
+        SDL_FreeSurface(surface_pixels);
+        surface_pixels = nullptr;
+    }
+    return tex != nullptr;
+}
+
+bool texture::load_pixels_from_file(std::string file)
+{
+    free();
+    SDL_Surface* loaded_surface = IMG_Load(file.c_str());
+    if(loaded_surface == nullptr)
+    {
+        std::cout << "Unable to load image! " << IMG_GetError();
+    }
+    else
+    {
+        surface_pixels = SDL_ConvertSurfaceFormat(loaded_surface, 
+                                                  SDL_GetWindowPixelFormat(program::window), 
+                                                  0);
+        if(surface_pixels == nullptr)
+        {
+            std::cout << "Unable to convert loaded surface to display format! " 
+                      << SDL_GetError();
+        }
+        else
+        {
+            width = surface_pixels->w;
+            height = surface_pixels->h;
+        }
+        SDL_FreeSurface(loaded_surface);
+    }
+    return surface_pixels != nullptr;
+}
+
+void texture::render(float x, float y, 
+                   SDL_Rect* clip, 
+                   double angle,
+                   SDL_FPoint* center, 
+                   SDL_RendererFlip flip)
+{
+    SDL_FRect render_quad = { x, y, 96, 96 };
+    if(clip != 0)
+    {
+        render_quad.w = clip->w;
+        render_quad.h = clip->h;
+    }
+    SDL_RenderCopyExF(program::renderer, tex, clip, &render_quad, angle, center, flip);
+}
+
+Uint32* texture::get_pixels32()
+{
+    Uint32* pixels = nullptr;
+    if(surface_pixels != nullptr)
+    {
+        pixels = static_cast<Uint32*>(surface_pixels->pixels);
+    }
+    return pixels;
+}
+
+Uint32 texture::get_pixel32(Uint32 x, Uint32 y)
+{
+    Uint32* pixels = static_cast<Uint32*>(surface_pixels->pixels);
+    return pixels[(y * get_pitch32()) + x];
+}
+
+Uint32 texture::get_pitch32()
+{
+    Uint32 pitch = 0;
+    if(surface_pixels != nullptr)
+    {
+        pitch = surface_pixels->pitch / 4;
+    }
+    return pitch;
+}
+
+int texture::get_width()  { return width;  }
+int texture::get_height() { return height; }
+
+////////////////BITMAPFONT////////////////
+bitmapfont::bitmapfont() : newline(0), space(0) {}
+bitmapfont::~bitmapfont() {}
+
+bool bitmapfont::build_font(std::string file, int spacing, int new_l)
+{
+    free();
+    //std::cout << "Building font\n";
+    
+    space = spacing;
+    newline = new_l;
+    bool success = true;
+
+    if(!f_texture.load_pixels_from_file(file))
+    {
+        std::cout << "Unable to load bitmap font surface!\n";
+        success = false;
+    }
+    else
+    {
+        Uint32 bg_color = f_texture.get_pixel32(0, 0);
+
+        int cell_w = f_texture.get_width() / 16;
+        int cell_h = f_texture.get_height() / 16;
+
+        int top = cell_h;
+        int base_a = cell_h;
+        int current_char = 0;
+
+        //Go through the cell rows
+        for(int rows = 0; rows < 16; ++rows)
+        {
+            //Go through the cell columns
+            for(int cols = 0; cols < 16; ++cols)
+            {
+                chars[current_char].x = cell_w * cols;
+                chars[current_char].y = cell_h * rows;
+                chars[current_char].w = cell_w;
+                chars[current_char].h = cell_h;
+
+                //Find left side
+                //Go through pixel columns
+                for(int p_col = 0; p_col < cell_w; ++p_col)
+                {
+                    for(int p_row = 0; p_row < cell_h; ++p_row)
+                    {
+                        //Get the pixel offsets
+                        int p_x = (cell_w * cols) + p_col;
+                        int p_y = (cell_h * rows) + p_row;
+
+                        //If a non colorkey pixel is found
+                        if(f_texture.get_pixel32(p_x, p_y) != bg_color)
+                        {
+                            chars[current_char].x = p_x;
+                            p_col = cell_w;
+                            p_row = cell_h;
+                        }
+                    }
+                }
+
+                //Find the right side
+                //Go through pixel columns
+                for(int p_col_w = cell_w - 1; p_col_w >= 0; --p_col_w)
+                {
+                    for(int p_row_w = 0; p_row_w < cell_h; ++p_row_w)
+                    {
+                        int p_x = (cell_w * cols) + p_col_w;
+                        int p_y = (cell_h * rows) + p_row_w;
+                        
+                        if(f_texture.get_pixel32(p_x, p_y) != bg_color)
+                        {
+                            //Set the width
+                            chars[current_char].w = (p_x - chars[current_char].x) + 1;
+
+                            //Break the loops
+                            p_col_w = -1;
+                            p_row_w = cell_h;
+                        }
+                    }
+                }
+
+                    //Find top
+                    //Go through pixel rows
+                    for(int p_row = 0; p_row < cell_h; ++p_row)
+                    {
+                        for(int p_col = 0; p_col < cell_w; ++p_col)
+                        {
+                            int p_x = (cell_w * cols) + p_col;
+                            int p_y = (cell_h * rows) + p_row;
+
+                            if(f_texture.get_pixel32(p_x, p_y) != bg_color)
+                            {
+                                if(p_row < top)
+                                {
+                                    top = p_row;
+                                }
+
+                                //Break the loops
+							    p_col = cell_w;
+							    p_row = cell_h;
+                            }
+                        }
+                    }
+
+                    //Find bottom of A
+                    if(current_char == 'A')
+                    {
+                        for(int p_row = cell_h - 1; p_row >= 0; --p_row)
+                        {
+                            for(int p_col = 0; p_col < cell_w; ++p_col)
+                            {
+                                int p_x = (cell_w * cols) + p_col;
+                                int p_y = (cell_h * rows) + p_row;
+
+                                if(f_texture.get_pixel32(p_x, p_y) != bg_color)
+                                {
+                                    base_a = p_row;
+                                    p_col = cell_w;
+                                    p_row = -1;
+                                }
+                            }
+                        }
+                    }
+                current_char++;
+            }
+        }
+        
+        //Calculate space
+        //space = cell_w / 4;
+        
+        //Calculate new line
+        //new_line = base_a -top;
+        
+        //Lop off excess top pixels
+        for(int i = 0; i < 256; ++i)
+        {
+            chars[i].y += top;
+            chars[i].h -= top;
+        }
+
+        //Create final texture
+        if(!f_texture.load_from_pixels())
+        {
+            std::cout << "Unable to create font texture\n";
+            success = false;
+        }
+    }
+    std::cout << "Font loaded\n";
+    return success;
+}
+
+void bitmapfont::render_text(int x, int y, std::string txt)
+{
+     if(f_texture.get_width() > 0)
+    {
+        int cur_x = x; 
+        int cur_y = y;
+
+        //Go through the text
+        for(int i = 0; i < txt.length(); ++i)
+        {
+            //If the character is a space
+            if(txt[i] == ' ')
+            {
+                //Move over
+                cur_x += space;
+            }
+            //If the current character is a newline
+            else if(txt[i] == '\n')
+            {
+                cur_y += newline;
+                cur_x = x;
+            }
+            else
+            {
+                int ascii = (unsigned char)txt[i];
+                f_texture.render(cur_x, cur_y, &chars[ascii], 0.0, 
+                                    nullptr, 
+                                    SDL_FLIP_NONE);
+                cur_x += chars[ascii].w + 1;
+            }
+        }
+    }
+}
+
+void bitmapfont::free()
+{
+    f_texture.free();
+}
+
+void draw_rect(int x, int y, int w, int h, 
+               int r, int g, int b, int a)
+{
+    SDL_Rect fill_rect = { x, y, w, h };
+    SDL_SetRenderDrawColor(program::renderer, r, g, b, a);
+    SDL_RenderFillRect(program::renderer, &fill_rect);
+}
+
