@@ -13,10 +13,10 @@ class program
 public:
     program();
 
-    static SDL_Window* window;
+    static SDL_Window*   window;
     static SDL_Renderer* renderer;
-    static SDL_Event event;
-    static bool running;
+    static SDL_Event     event;
+    static bool          running;
 
     void init(const char* title, 
               int x, int y, 
