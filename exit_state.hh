@@ -10,6 +10,7 @@ public:
 
     void init();
     void close();
+    
     void handle_events();
     void update();
     void render();

@@ -6,8 +6,8 @@ int main(int argc, char* argv[])
 {
     g = new program();
     g->init("Games Library", SDL_WINDOWPOS_CENTERED, 
-                                    SDL_WINDOWPOS_CENTERED, 
-                                    640, 400, false);
+                             SDL_WINDOWPOS_CENTERED, 
+                             640, 400, false);
 
     try
     {

@@ -7,7 +7,13 @@ main_menu main_menu::instance;
 
 main_menu::main_menu()  {}
 
-void main_menu::init()  {}
+void main_menu::init()  
+{
+    for(unsigned int i = 0; i < 4; i++)
+    {
+        items.push_back(menu_item(100, 100 + 50 * i, 100, 50, "Item"));
+    }
+}
 void main_menu::close() {}
 
 void main_menu::handle_events() 
@@ -46,6 +52,11 @@ void main_menu::render()
 {
     SDL_SetRenderDrawColor(program::renderer, 0, 0, 0, 255);
     SDL_RenderClear(program::renderer);
+
+    for(unsigned int i = 0; i < items.size(); i++)
+    {
+        items[i].render();
+    }
 
     SDL_RenderPresent(program::renderer);
 }
