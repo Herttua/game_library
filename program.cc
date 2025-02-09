@@ -2,20 +2,20 @@
 
 #define SDL_HINT_RENDER_VSYNC "SDL_RENDER_VSYNC"
 
-SDL_Renderer* program::renderer     = nullptr;
-SDL_Window*   program::window       = nullptr;
+SDL_Renderer* program::renderer      = nullptr;
+SDL_Window*   program::window        = nullptr;
+bool          program::running       = true;
 SDL_Event     program::event;
-bool          program::running      = true;
 
-game_state* program::current_state  = nullptr;
-game_state* program::next_state     = nullptr;
+game_state*   program::current_state = nullptr;
+game_state*   program::next_state    = nullptr;
 
 program::program() {}
 
 void program::init(const char* title, 
-    int x, int y, 
-    int w, int h,
-    bool fullscreen) 
+                   int x, int y, 
+                   int w, int h,
+                   bool fullscreen) 
 {
     if(SDL_Init(SDL_INIT_EVERYTHING) == 0)
     {
@@ -26,7 +26,7 @@ void program::init(const char* title,
         {
             flags = SDL_WINDOW_FULLSCREEN;
         }
-        window = SDL_CreateWindow(title, x, y, w, h, flags);
+        window   = SDL_CreateWindow(title, x, y, w, h, flags);
         renderer = SDL_CreateRenderer(window, -1, 
                                 SDL_RENDERER_ACCELERATED | 
                                 SDL_RENDERER_PRESENTVSYNC | 
