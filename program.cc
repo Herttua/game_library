@@ -7,7 +7,14 @@ SDL_Window*   program::window   = nullptr;
 SDL_Event     program::event;
 bool          program::running = true;
 
-program::program() {}
+game_state* program::current_state = nullptr;
+game_state* program::next_state = nullptr;
+
+program::program() 
+{
+    current_state = nullptr;
+    next_state = nullptr;
+}
 
 void program::init(const char* title, 
     int x, int y, 
@@ -36,6 +43,9 @@ void program::init(const char* title,
 
     last_time = SDL_GetTicks();
 
+    current_state = main_menu::get();
+    current_state->init();
+
     std::cout << "SDL initialized\n";
 }
 
@@ -43,23 +53,60 @@ void program::run()
 {
     while(running)
     {
-        while(SDL_PollEvent(&event))
-        {
-            if(event.type == SDL_QUIT)
-            {
-                running = false;
-            }
+        Uint32 frame_start = SDL_GetTicks();
 
-            if(event.type == SDL_KEYDOWN)
-            {
-                if(event.key.keysym.sym == SDLK_ESCAPE)
-                {
-                    running = false;
-                }
-            }
+        /*This calculated delta time fucks up the rendering*/
+        /*so we are using fixed delta time of 0.1f for now*/
+        
+        //Uint32 delta_ms    = frame_start - last_time;    
+        //float delta_time   = delta_ms / 1000.0f;
+        //last_time          = frame_start;
+
+        handle_events();
+        update();
+        change_state();
+        render();
+
+        frame_time = SDL_GetTicks() - frame_start;
+        while(frame_delay > frame_time)
+        {
+            frame_time = SDL_GetTicks() - frame_start;
         }
-        SDL_RenderClear(renderer);
-        SDL_RenderPresent(renderer);
+    }
+}
+
+void program::handle_events()
+{
+    current_state->handle_events();
+}
+
+void program::update()
+{
+    current_state->update();
+}
+
+void program::render()
+{
+    current_state->render();
+}
+
+void program::set_next_state(game_state* state) 
+{
+    if(next_state != exit_state::get())
+    {
+        next_state = state;
+    }
+}
+
+void program::change_state()
+{
+    if(next_state != nullptr)
+    {
+        current_state->close();
+        next_state->init();
+
+        current_state = next_state;
+        next_state = nullptr;
     }
 }
 

@@ -36,22 +36,6 @@ private:
     int height;
 };
 
-class bitmapfont
-{
-public:
-    bitmapfont();
-    ~bitmapfont();
-
-    bool build_font(std::string file, int spacing, int new_l);
-    void free();
-    void render_text(int x, int y, std::string txt);
-
-    texture f_texture;
-    SDL_Rect chars[256];
-    int newline;
-    int space;
-};
-
 void draw_rect(int x, int y, int w, int h, 
                int r, int g, int b, int a);
 

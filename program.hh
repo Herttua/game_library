@@ -5,6 +5,8 @@
 #include <SDL2/SDL.h>
 
 #include "game_state.hh"
+#include "exit_state.hh"
+#include "main_menu.hh"
 
 class program
 {
@@ -24,10 +26,18 @@ public:
     void run();
     void clean();
 
+    void handle_events();
+    void update();
+    void render();
+
+    static game_state* current_state;
+    static game_state* next_state;
+
     static void set_next_state(game_state* state);
     static void change_state();
 
 private:
+    
     const int FPS = 60;
     const int frame_delay = 1000 / FPS;
 
