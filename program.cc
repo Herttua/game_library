@@ -10,11 +10,7 @@ bool          program::running = true;
 game_state* program::current_state = nullptr;
 game_state* program::next_state = nullptr;
 
-program::program() 
-{
-    current_state = nullptr;
-    next_state = nullptr;
-}
+program::program() {}
 
 void program::init(const char* title, 
     int x, int y, 
