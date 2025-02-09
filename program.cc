@@ -2,13 +2,13 @@
 
 #define SDL_HINT_RENDER_VSYNC "SDL_RENDER_VSYNC"
 
-SDL_Renderer* program::renderer = nullptr;
-SDL_Window*   program::window   = nullptr;
+SDL_Renderer* program::renderer     = nullptr;
+SDL_Window*   program::window       = nullptr;
 SDL_Event     program::event;
-bool          program::running = true;
+bool          program::running      = true;
 
-game_state* program::current_state = nullptr;
-game_state* program::next_state = nullptr;
+game_state* program::current_state  = nullptr;
+game_state* program::next_state     = nullptr;
 
 program::program() {}
 
