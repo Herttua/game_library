@@ -4,5 +4,6 @@
         "memory": "cpp",
         "format": "cpp",
         "functional": "cpp"
-    }
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }
