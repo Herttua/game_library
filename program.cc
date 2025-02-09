@@ -24,7 +24,7 @@ void program::init(const char* title,
         int flags = 0;
         if(fullscreen)
         {
-        flags = SDL_WINDOW_FULLSCREEN;
+            flags = SDL_WINDOW_FULLSCREEN;
         }
         window = SDL_CreateWindow(title, x, y, w, h, flags);
         renderer = SDL_CreateRenderer(window, -1, 

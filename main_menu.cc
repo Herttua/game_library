@@ -22,19 +22,22 @@ void main_menu::handle_events()
             break;
 
         case SDL_KEYDOWN:
-        switch(program::event.key.keysym.scancode)
         {
-            case SDL_SCANCODE_ESCAPE:
-                program::set_next_state(exit_state::get());
-                program::running = false;
-                break;
+            switch(program::event.key.keysym.scancode)
+            {
+                case SDL_SCANCODE_ESCAPE:
+                    program::set_next_state(exit_state::get());
+                    program::running = false;
+                    break;
 
-            case SDL_SCANCODE_RIGHT:
-                program::set_next_state(elastic_collision::get());
-                break;
+                case SDL_SCANCODE_RIGHT:
+                    program::set_next_state(elastic_collision::get());
+                    break;
 
-            default: break;
-        }
+                default: break;
+            }
+        }break;
+        
         default: break;
     }
 }
