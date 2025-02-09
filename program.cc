@@ -9,6 +9,7 @@ SDL_Event     program::event;
 
 game_state*   program::current_state = nullptr;
 game_state*   program::next_state    = nullptr;
+bitmapfont    program::l_font;
 
 program::program() {}
 
@@ -43,6 +44,8 @@ void program::init(const char* title,
     current_state->init();
 
     std::cout << "SDL initialized\n";
+
+    l_font.build_font("gfx/big_font_white.png", 6, 12);
 }
 
 void program::run()
@@ -104,6 +107,11 @@ void program::change_state()
         current_state = next_state;
         next_state = nullptr;
     }
+}
+
+void program::print_text(int x, int y, std::string txt)
+{
+    l_font.render_text(x, y, txt);
 }
 
 void program::clean()

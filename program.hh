@@ -7,6 +7,7 @@
 #include "game_state.hh"
 #include "exit_state.hh"
 #include "main_menu.hh"
+#include "bitmapfont.hh"
 
 class program
 {
@@ -32,9 +33,11 @@ public:
 
     static game_state* current_state;
     static game_state* next_state;
+    static bitmapfont l_font;
 
     static void set_next_state(game_state* state);
     static void change_state();
+    static void print_text(int x, int y, std::string txt);
 
 private:
     

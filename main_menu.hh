@@ -14,10 +14,9 @@ struct menu_item
     {}
 
     void update() {}
-    void render() 
-    {
-        draw_rect(x, y, w, h, 255, 0, 0, 255);
-    }
+    void render();
+
+    void draw_higlight();
 
     int x, y, w, h;
     std::string text;

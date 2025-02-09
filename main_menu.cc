@@ -11,7 +11,7 @@ void main_menu::init()
 {
     for(unsigned int i = 0; i < 4; i++)
     {
-        items.push_back(menu_item(100, 100 + 50 * i, 100, 50, "Item"));
+        items.push_back(menu_item(120, 120 + 52 * i, 140, 48, "Item"));
     }
 }
 void main_menu::close() {}
@@ -58,10 +58,26 @@ void main_menu::render()
         items[i].render();
     }
 
+    program::print_text(5, 5, "Main Menu");
+
     SDL_RenderPresent(program::renderer);
 }
 
 main_menu* main_menu::get()
 {
     return &instance;
+}
+
+void menu_item::draw_higlight()
+{
+    SDL_SetRenderDrawColor(program::renderer, 255, 255, 255, 255);
+    SDL_RenderDrawLine(program::renderer, x, y, x + w, y);
+    SDL_RenderDrawLine(program::renderer, x + w, y, x + w, y + h);
+}
+
+void menu_item::render()
+{
+    draw_rect(x, y, w, h, 245, 10, 10, 255);
+    draw_higlight();
+    program::print_text(x + 5, y + 5, text);
 }
