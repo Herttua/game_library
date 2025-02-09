@@ -28,9 +28,9 @@ void program::init(const char* title,
         }
         window   = SDL_CreateWindow(title, x, y, w, h, flags);
         renderer = SDL_CreateRenderer(window, -1, 
-                                SDL_RENDERER_ACCELERATED | 
-                                SDL_RENDERER_PRESENTVSYNC | 
-                                SDL_RENDERER_TARGETTEXTURE);
+                                      SDL_RENDERER_ACCELERATED  | 
+                                      SDL_RENDERER_PRESENTVSYNC | 
+                                      SDL_RENDERER_TARGETTEXTURE);
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
         SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
         SDL_SetRenderDrawColor(renderer, 250, 250, 250, 255);
