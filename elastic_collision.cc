@@ -34,11 +34,6 @@ void elastic_collision::handle_events()
         switch(program::event.key.keysym.scancode)
         {
             case SDL_SCANCODE_ESCAPE:
-                program::set_next_state(exit_state::get());
-                program::running = false;
-                break;
-
-            case SDL_SCANCODE_LEFT:
                 program::set_next_state(main_menu::get());
                 break;
 

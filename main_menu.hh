@@ -8,9 +8,9 @@
 struct menu_item
 {
     menu_item(int p_x, int p_y, 
-              int p_w, int p_h, std::string t) : x(p_x), y(p_y), 
+              int p_w, int p_h, std::string t, int a) : x(p_x), y(p_y), 
                                                  w(p_w), h(p_h), 
-                                                 text(t)
+                                                 text(t), active(a)
     {}
 
     void update() {}
@@ -19,6 +19,7 @@ struct menu_item
     void draw_higlight();
 
     int x, y, w, h;
+    int active;
     std::string text;
 };
 
