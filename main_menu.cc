@@ -15,7 +15,10 @@ void main_menu::init()
     items.push_back(menu_item(120, 120 + 52, 140, 48, "Slingshot", 0));
     items.push_back(menu_item(120, 120 + (52 * 2), 140, 48, "Exit", 0));
 }
-void main_menu::close() {}
+void main_menu::close() 
+{
+    items.clear();
+}
 
 void main_menu::handle_events() 
 {

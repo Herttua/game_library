@@ -18,7 +18,10 @@ void elastic_collision::init()
         balls.emplace_back(x, y, vx, vy, radius, 1, friction);
     }
 }
-void elastic_collision::close() {}
+void elastic_collision::close() 
+{
+    balls.clear();
+}
 void elastic_collision::handle_events() 
 {
     SDL_PollEvent(&program::event);
@@ -31,14 +34,16 @@ void elastic_collision::handle_events()
             break;
 
         case SDL_KEYDOWN:
-        switch(program::event.key.keysym.scancode)
-        {
-            case SDL_SCANCODE_ESCAPE:
-                program::set_next_state(main_menu::get());
-                break;
+            switch(program::event.key.keysym.scancode)
+            {
+                case SDL_SCANCODE_ESCAPE:
+                    program::set_next_state(main_menu::get());
+                    break;
 
-            default: break;
-        }
+                default: break;
+            }
+            break;
+
         default: break;
     }
 }
