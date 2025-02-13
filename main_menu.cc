@@ -1,6 +1,7 @@
 #include "main_menu.hh"
 #include "exit_state.hh"
 #include "elastic_collision.hh"
+#include "slingshot.hh"
 #include "program.hh"
 
 main_menu main_menu::instance;
@@ -60,7 +61,7 @@ void main_menu::handle_events()
                             break;
 
                         case 1:
-                            //program::set_next_state(slingshot::get());
+                            program::set_next_state(slingshot::get());
                             break;
                         case 2:
                             program::set_next_state(exit_state::get());
@@ -124,5 +125,5 @@ void menu_item::render()
     if(active == 1)
         draw_higlight();
     
-        program::print_text(x + 5, y + 5, text);
+    program::print_text(x + 5, y + 5, text);
 }
