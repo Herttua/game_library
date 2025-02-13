@@ -3,6 +3,7 @@
 #include "elastic_collision.hh"
 #include "slingshot.hh"
 #include "program.hh"
+#include "game.hh"
 
 main_menu main_menu::instance;
 
@@ -12,9 +13,10 @@ main_menu::main_menu()  {}
 
 void main_menu::init()  
 {
-    items.push_back(menu_item(120, 120, 140, 48, "Elastic Collision", 1));
-    items.push_back(menu_item(120, 120 + 52, 140, 48, "Slingshot", 0));
-    items.push_back(menu_item(120, 120 + (52 * 2), 140, 48, "Exit", 0));
+    items.push_back(menu_item(120, 100, 180, 48, "Elastic Collision", 1));
+    items.push_back(menu_item(120, 100 + 52, 180, 48, "Slingshot", 0));
+    items.push_back(menu_item(120, 100 + (52 * 2), 180, 48, "Entity Component System", 0));
+    items.push_back(menu_item(120, 100 + (52 * 3), 180, 48, "Exit", 0));
 }
 void main_menu::close() 
 {
@@ -63,7 +65,12 @@ void main_menu::handle_events()
                         case 1:
                             program::set_next_state(slingshot::get());
                             break;
+
                         case 2:
+                            program::set_next_state(game::get());
+                            break;
+
+                        case 3:
                             program::set_next_state(exit_state::get());
                             program::running = false;
                             break;

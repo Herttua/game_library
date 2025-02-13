@@ -83,6 +83,8 @@ void elastic_collision::render()
         }
     }
 
+    program::print_text(5, 5, "Elastic Collision Simulation");
+
     SDL_RenderPresent(program::renderer);
 }
 
