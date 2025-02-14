@@ -47,8 +47,8 @@ void game::render()
     SDL_SetRenderDrawColor(program::renderer, 0, 0, 0, 255);
     SDL_RenderClear(program::renderer);
 
-    SDL_SetRenderDrawColor(program::renderer, 255, 0, 0, 255);
-    /*for(int w = 0; w < player.get_component<transform>().radius * 2; w++)
+    /*SDL_SetRenderDrawColor(program::renderer, 255, 0, 0, 255);
+    for(int w = 0; w < player.get_component<transform>().radius * 2; w++)
     {
         for(int h = 0; h < player.get_component<transform>().radius * 2; h++)
         {
