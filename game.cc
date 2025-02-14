@@ -2,10 +2,17 @@
 #include "program.hh"
 #include "main_menu.hh"
 #include "exit_state.hh"
-
-game::game() {}
+#include "component_system.hh"
+#include "transform.hh"
 
 game game::instance;
+master _master;
+//auto& player(_master.add_entity()); 
+
+game::game() 
+{
+    //player.add_component<transform>(280.f, 150.f, 15.f, 3.f, 1);
+}
 
 void game::init() {}
 void game::close() {}
@@ -39,6 +46,22 @@ void game::render()
 {
     SDL_SetRenderDrawColor(program::renderer, 0, 0, 0, 255);
     SDL_RenderClear(program::renderer);
+
+    SDL_SetRenderDrawColor(program::renderer, 255, 0, 0, 255);
+    /*for(int w = 0; w < player.get_component<transform>().radius * 2; w++)
+    {
+        for(int h = 0; h < player.get_component<transform>().radius * 2; h++)
+        {
+            int dx = player.get_component<transform>().radius - w; // Distance from center
+            int dy = player.get_component<transform>().radius - h;
+            if((dx * dx + dy * dy) <= (player.get_component<transform>().radius * player.get_component<transform>().radius))
+            {
+                SDL_RenderDrawPointF(program::renderer, 
+                    player.get_component<transform>().pos.x + dx, 
+                    player.get_component<transform>().pos.y + dy);
+            }    
+        }
+    }*/
 
     program::print_text(5, 5, "Entity Component System");
 

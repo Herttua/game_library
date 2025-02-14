@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "game_state.hh"
+#include "component_system.hh"
 
 struct ball
 {
@@ -49,6 +50,8 @@ private:
     elastic_collision();
 
     std::vector<ball> balls;
+
+    master _master;
 
     const float dt = 0.16f;
     const float friction = 0.999f;
