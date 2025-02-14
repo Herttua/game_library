@@ -25,11 +25,11 @@ public:
     }
     transform(float x, float y, float r, float m, int sc) 
     {
-        pos.x = x;
-        pos.y = y;
-        radius     = r;
-        mass       = m;
-        scale      = sc;
+        pos.x  = x;
+        pos.y  = y;
+        radius = r;
+        mass   = m;
+        scale  = sc;
     }
 
     ~transform() {}

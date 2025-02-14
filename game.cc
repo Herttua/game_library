@@ -34,6 +34,8 @@ void game::handle_events()
                 case SDL_SCANCODE_ESCAPE:
                     program::set_next_state(main_menu::get());
                     break;
+
+                default: break;
             }
         }
         break;

@@ -116,6 +116,7 @@ void program::print_text(int x, int y, std::string txt)
 
 void program::clean()
 {
+    l_font.free();
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
 
